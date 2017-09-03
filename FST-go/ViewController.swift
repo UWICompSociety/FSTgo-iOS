@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
+    
+    
     @IBOutlet weak var mainMenu: UICollectionView!
     let buttonLabel:[String] = ["Calendar","Contacts","FAQs","News","Photos","Places","Scholarships and Bursaries","Shuttle Bus","Videos"]
     
@@ -23,6 +25,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         // Do any additional setup after loading the view, typically from a nib.
         
         //Customize flow layout of view to override default flow layout
+        
         let size = UIScreen.main.bounds.width/3 - 10
         let layout = UICollectionViewFlowLayout()
         layout.itemSize = CGSize(width: size, height: size)
@@ -40,6 +43,7 @@ class ViewController: UIViewController, UICollectionViewDataSource, UICollection
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return buttonLabel.count
     }

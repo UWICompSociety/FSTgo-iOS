@@ -9,7 +9,7 @@ use_frameworks!
 pod 'Alamofire'
 pod 'SDWebImage' , '~>3.7'
 pod 'SVProgressHUD'
-pod ‘GoogleMaps’
-pod 'JTAppleCalendar' , '~>7.0'
+
+
 
 end

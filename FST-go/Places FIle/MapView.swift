@@ -66,6 +66,8 @@ class MapView: UIViewController, CLLocationManagerDelegate {
         super.viewDidLoad()
         
         // Do any additional setup after loading the view.
+        
+        
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyBest
         manager.requestWhenInUseAuthorization()

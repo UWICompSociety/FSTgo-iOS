@@ -20,7 +20,6 @@ class Album: NSObject {
         Alamofire.request("http://fast.mona.uwi.edu/images", method: .get , headers: nil).responseJSON { response -> Void in
             switch response.result{
                 case .success(let JSON):
-                    print(JSON)
                     let response = JSON as! NSArray
                     var albumArray = [Photo]()
                 

@@ -7,14 +7,38 @@
 //
 
 import UIKit
-import JTAppleCalendar
+import Foundation
 
-class CalendarVC: UIViewController {
-    let dateFormatter = DateFormatter()
+
+class CalendarVC: UIViewController, UITableViewDelegate,UITableViewDataSource,calendarDelegate{
+   
+    @IBOutlet weak var eventsTable: UITableView!
+    var calendar:[Event] = [Event]()
+    var event:Calendar = Calendar()
+    var select:Event?
+    
+    @IBOutlet weak var popUp: UIView!
+    @IBOutlet weak var eventTitle: UILabel!
+    @IBOutlet weak var eventDate: UILabel!
+    @IBOutlet weak var eventDescription: UILabel!
+   
+    @IBOutlet weak var eventTime: UILabel!
+   
+    @IBOutlet weak var background: UIButton!
+    @IBOutlet weak var centrePop: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        self.eventsTable.delegate = self
+        self.eventsTable.dataSource = self
+        self.event.delegate = self
+        event.getEvents()
+        
+        popUp.layer.cornerRadius = 10
+        popUp.layer.masksToBounds = true
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -22,7 +46,58 @@ class CalendarVC: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    
+    @IBAction func dismiss(_ sender: Any) {
+        centrePop.constant = -1000
+        UIView.animate(withDuration: 0.1) { 
+            self.view.layoutIfNeeded()
+            self.background.alpha = 0
+        }
+    }
+    @IBAction func share(_ sender: Any) {
+        let activity = UIActivityViewController(activityItems: [self.select?.title as Any, self.select?.date as Any, self.select?.time as Any, self.select?.eventDescription as Any], applicationActivities: nil)
+        activity.popoverPresentationController?.sourceView = self.view
+        
+        self.present(activity, animated: true, completion: nil)
+    }
+    func calendarData() {
+        self.calendar = self.event.calendar
+        self.eventsTable.reloadData()
+    }
+    func selection(){
+        if let eventSelect = self.select{
+            self.eventTitle.text = eventSelect.title
+            self.eventDescription.text = eventSelect.eventDescription
+            self.eventDate.text = eventSelect.date
+            self.eventTime.text = eventSelect.time
+        }
+            
+        
+    }
+    func show(){
+        selection()
+        centrePop.constant = 0
+        UIView.animate(withDuration: 0.4) { 
+            self.view.layoutIfNeeded()
+            self.background.alpha = 0.5
+        }
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return calendar.count
+    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "calCell", for: indexPath)
+        
+        let titleLabel = cell.viewWithTag(1) as! UILabel
+        titleLabel.text = calendar[indexPath.row].title
+        
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.select = calendar[indexPath.row]
+        show()
+    }
     /*
     // MARK: - Navigation
 
@@ -34,22 +109,22 @@ class CalendarVC: UIViewController {
     */
 
 }
-extension CalendarVC: JTAppleCalendarViewDelegate,JTAppleCalendarViewDataSource{
-    func configureCalendar(_ calendar: JTAppleCalendarView) -> ConfigurationParameters {
-        dateFormatter.dateFormat = "yyyy mm dd"
-        dateFormatter.timeZone = Calendar.current.timeZone
-        dateFormatter.locale = Calendar.current.locale
-        let startDate = dateFormatter.date(from: "2016 01 01")!
-        let endDate = dateFormatter.date(from: "2016 12 31")!
-        
-        let parameter = ConfigurationParameters(startDate: startDate, endDate: endDate)
-        
-        return parameter
-    }
-    func calendar(_ calendar: JTAppleCalendarView, cellForItemAt date: Date, cellState: CellState, indexPath: IndexPath) -> JTAppleCell {
-        let cell = calendar.dequeueReusableJTAppleCell(withReuseIdentifier: "calCell", for: indexPath) as! CalendarCell
-        cell.dateLabel.text = cellState.text
-        
-        return cell
-    }
-}
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+

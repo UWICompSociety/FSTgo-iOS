@@ -15,20 +15,27 @@ import SDWebImage
 
 class PhotosVC: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate,photoDelegate {
 
-    @IBOutlet weak var photoAlbum: UICollectionView!
+    @IBOutlet var photoAlbum: UICollectionView!
     
+    @IBOutlet weak var popUp: UIView!
+    @IBOutlet weak var centrePopUp: NSLayoutConstraint!
     var photo:[Photo] = [Photo]()
     let gallery:Album = Album()
     var selection:Photo?
+    var selectNum:Int = 0
     
+    @IBOutlet var leftGesture: UISwipeGestureRecognizer!
+    @IBOutlet var rightGesture: UISwipeGestureRecognizer!
+    @IBOutlet weak var selectedPhoto: UIImageView!
     
+    @IBOutlet weak var background: UIButton!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         SVProgressHUD .show(withStatus: "Loading...")
-        photoAlbum.delegate = self
-        photoAlbum.dataSource = self
+        self.photoAlbum.delegate = self
+        self.photoAlbum.dataSource = self
         self.gallery.photodelegate = self
         gallery.getPhotos()
     
@@ -41,6 +48,11 @@ class PhotosVC: UIViewController, UICollectionViewDataSource, UICollectionViewDe
         layout.minimumInteritemSpacing = 5
         layout.minimumLineSpacing = 5
         photoAlbum.collectionViewLayout = layout
+        popUp.layer.cornerRadius = 10
+        popUp.layer.masksToBounds = true
+        
+        //self.selectedPhoto.isUserInteractionEnabled = true
+        
     }
     
 
@@ -53,7 +65,58 @@ class PhotosVC: UIViewController, UICollectionViewDataSource, UICollectionViewDe
         self.photo = self.gallery.Album
         self.photoAlbum.reloadData()
     }
+    func show(){
+        photoSelection()
+        centrePopUp.constant = 0
+        UIView.animate(withDuration: 0.4) { 
+            self.view.layoutIfNeeded()
+            self.background.alpha = 0.5
+        }
+        self.leftGesture = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(swipe:)))
+        self.leftGesture.direction = UISwipeGestureRecognizerDirection.left
+        self.popUp.addGestureRecognizer(self.leftGesture)
+        
+        self.rightGesture = UISwipeGestureRecognizer(target: self.selectedPhoto, action: #selector(swipeAction(swipe:)))
+        self.rightGesture.direction = UISwipeGestureRecognizerDirection.right
+        self.popUp.addGestureRecognizer(self.rightGesture)
+    }
+    func photoSelection(){
+        if let selectImage = self.selection{
+            let urlString = selectImage.image
+            let thumbnail = NSURL(string: urlString)
+            if let url = thumbnail{
+                self.selectedPhoto.sd_setImage(with: url as URL!)
+            }
+        }
+    }
+    func swipeAction(swipe:UISwipeGestureRecognizer){
+        var imageIndex = self.selectNum
+        switch swipe.direction {
+        case UISwipeGestureRecognizerDirection.right:
+            imageIndex -= 1
+            self.selection = photo[imageIndex]
+            photoSelection()
+        
+        case UISwipeGestureRecognizerDirection.left:
+            imageIndex += 1
+            self.selection = photo[imageIndex]
+            photoSelection()
+        
+        default:
+            print("Error could not skip")
+        }
+        
     
+    }
+    
+    
+    @IBAction func dismissPopUp(_ sender: Any) {
+        centrePopUp.constant = -1000
+        UIView.animate(withDuration: 0.1) { 
+            self.view.layoutIfNeeded()
+            self.background.alpha = 0
+        }
+    }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photo.count
@@ -72,7 +135,9 @@ class PhotosVC: UIViewController, UICollectionViewDataSource, UICollectionViewDe
         return cell
     }
    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        selection?.image = photo[indexPath.row].image
+        self.selection = photo[indexPath.row]
+        self.selectNum = indexPath.row
+        show()
         
     }
     

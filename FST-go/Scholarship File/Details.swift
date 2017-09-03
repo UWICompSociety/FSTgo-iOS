@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SafariServices
 
 class Details: UIViewController {
     
@@ -35,6 +36,13 @@ class Details: UIViewController {
         }
     }
 
+    @IBAction func scholarLink(_ sender: Any) {
+        let urlString = self.selection?.scholarUrl
+        if let url = URL(string: urlString!){
+            let browse = SFSafariViewController(url: url, entersReaderIfAvailable: true)
+            present(browse, animated: true, completion: nil)
+        }
+    }
     /*
     // MARK: - Navigation
 

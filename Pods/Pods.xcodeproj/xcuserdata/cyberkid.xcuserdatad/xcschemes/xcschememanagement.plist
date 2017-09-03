@@ -9,11 +9,6 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>JTAppleCalendar.xcscheme</key>
-		<dict>
-			<key>isShown</key>
-			<false/>
-		</dict>
 		<key>Pods-FST-go.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,12 +27,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>1C4721A99FDECEB54DC90969A46A4A1C</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>513C1F72054A67DCEF56C1BDE62A6909</key>
+		<key>15AB756D33955FFA79B714D95F34BB67</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -47,12 +37,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BF7CCD0FDF65212787EE47ABC50EDBD2</key>
+		<key>A651B706AC0EAD138B6C5EE47E27FAFB</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BFED2E29E95E065400F8846E0231A970</key>
+		<key>E7778C9627FC84EF0CE0F3C6A316DF81</key>
 		<dict>
 			<key>primary</key>
 			<true/>
